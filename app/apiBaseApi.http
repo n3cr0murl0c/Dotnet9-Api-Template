@@ -1,0 +1,6 @@
+@apiBase_HostAddress = http://localhost:5212
+
+GET {{apiBase_HostAddress}}/api/v1/
+Accept: application/json
+
+###

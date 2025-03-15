@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+      - main
+      - dev
+
+pool:
+  vmImage: "windows-latest"
+
+variables:
+  siteName: apiBase
+  solution: "**/*.sln"
+  buildPlatform: "x86"
+  buildConfiguration: "Release"
+  apiProjectDir: "$(System.DefaultWorkingDirectory)/api"
+  apiPublishDir: "$(System.DefaultWorkingDirectory)/api/Publish"
+  dotnetVersion: "8.x"
+  ASPNETCORE_ENVIRONMENT: "Production"
+  TargetFramework: "net9.0"
+  apiVersion: "1.0.$(Build.BuildId)"
+
+stages:
+  - stage: Build
+    displayName: "Build and Publish"
+    jobs:
+      - job: BuildJob
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: $(dotnetVersion)
+              includePreviewVersions: true
+
+          - task: DotNetCoreCLI@2
+            displayName: "Restore NuGet packages"
+            inputs:
+              command: "restore"
+              projects: "**/*.csproj"
+
+          - task: DotNetCoreCLI@2
+            displayName: "Build and Publish"
+            inputs:
+              command: "publish"
+              projects: "**/*.csproj"
+              arguments: "--configuration Release --runtime win-x86 --output $(apiPublishDir) --sc "
+              publishWebProjects: true
+              zipAfterPublish: false
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish artifacts"
+            inputs:
+              pathToPublish: "$(apiPublishDir)"
+              artifactName: "$(siteName)-api-build"
+              publishLocation: "Container"

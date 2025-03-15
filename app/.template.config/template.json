@@ -1,0 +1,40 @@
+{
+  "author": "Erick Escobar",
+  "name": "Arca Continental API Template for .NET 8.0+",
+  "description": "A template with all the services for Arca Continental",
+  "identity": "arca.webApi",
+  "shortName": "arcaWebApi",
+  "classifications": ["Web", "API", "Arca Continental"],
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "arcaWebApi",
+  "preferNameDirectory": true,
+  "symbols": {
+    "projectName": {
+      "type": "parameter",
+      "defaultValue": "arcaWebApi",
+      "replaces": "arcaWebApi",
+      "fileRename": "arcaWebApi"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "rename": {
+            "from": "arcaWebApi",
+            "to": "${projectName}"
+          }
+        }
+      ]
+    }
+  ],
+  "guids": ["D949E88D-B2F6-4B88-86F8-C9C849479A46"],
+  "primaryOutputs": [
+    {
+      "path": "arcaWebApi.csproj"
+    }
+  ]
+}
