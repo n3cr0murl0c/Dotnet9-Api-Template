@@ -1,22 +1,22 @@
 {
-  "author": "Erick Escobar",
-  "name": "Arca Continental API Template for .NET 8.0+",
-  "description": "A template with all the services for Arca Continental",
-  "identity": "arca.webApi",
-  "shortName": "arcaWebApi",
-  "classifications": ["Web", "API", "Arca Continental"],
+  "author": "github.com/n3cr0murl0c",
+  "name": "API Template for .NET 9.0+",
+  "description": "A template with all the infrastructure services needed to develop a .NET 9.0+ API",
+  "identity": "apiBase.webApi",
+  "shortName": "apiBase",
+  "classifications": ["Web", "API", ".NET", "9.0+"],
   "tags": {
     "language": "C#",
     "type": "project"
   },
-  "sourceName": "arcaWebApi",
+  "sourceName": "apiBase",
   "preferNameDirectory": true,
   "symbols": {
     "projectName": {
       "type": "parameter",
-      "defaultValue": "arcaWebApi",
-      "replaces": "arcaWebApi",
-      "fileRename": "arcaWebApi"
+      "defaultValue": "apiBase",
+      "replaces": "apiBase",
+      "fileRename": "apiBase"
     }
   },
   "sources": [
@@ -24,7 +24,7 @@
       "modifiers": [
         {
           "rename": {
-            "from": "arcaWebApi",
+            "from": "apiBase",
             "to": "${projectName}"
           }
         }
@@ -34,7 +34,7 @@
   "guids": ["D949E88D-B2F6-4B88-86F8-C9C849479A46"],
   "primaryOutputs": [
     {
-      "path": "arcaWebApi.csproj"
+      "path": "apiBase.csproj"
     }
   ]
 }
