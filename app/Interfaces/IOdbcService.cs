@@ -8,10 +8,6 @@ namespace apiBase.Interfaces
 
         // Task ReturnOdbcConnection(OdbcConnection connection);
 
-        public string GetBasisLibrary(string negocio);
-
-        // public string _connectionString;
-        public string GetBasisTempLibFile();
-        Task<int> CreateBasisTempDb(string tableStructure, string tempTable);
+        Task<int> CreateOdbcTempDb(string tableStructure, string tempTable);
     }
 }

@@ -2,6 +2,15 @@ namespace apiBase.Extensions
 {
     public static class CorsMiddleware
     {
+        /// <summary>
+        /// Adds custom CORS policies to the application.
+        /// </summary>
+        /// <param name="services">The collection of services to add to.</param>
+        /// <param name="configuration">The application's configuration.</param>
+        /// <returns>The collection of services with the added CORS policies.</returns>
+        /// <remarks>
+        /// Uses the configuration section "Cors:AllowedOrigins" to configure the allowed origins.
+        /// </remarks>
         public static IServiceCollection AddCustomCors(
             this IServiceCollection services,
             IConfiguration configuration

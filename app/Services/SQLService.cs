@@ -67,6 +67,16 @@ namespace apiBase.Services
             }
         }
 
+        /// <summary>
+        /// Executes a SQL query and maps the results to a list of objects
+        /// of type <typeparamref name="TObject"/>.
+        /// </summary>
+        /// <typeparam name="TObject">The type of object to map the results to.</typeparam>
+        /// <param name="query">The SQL query to execute.</param>
+        /// <param name="param">An anonymous object containing parameters to be
+        /// passed to the query.</param>
+        /// <returns>A list of objects of type <typeparamref name="TObject"/> containing
+        /// the results of the query.</returns>
         public async Task<IEnumerable<TObject>> ExecuteQueryAsync<TObject>(
             string query,
             object? param = null

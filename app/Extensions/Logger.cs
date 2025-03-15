@@ -10,6 +10,13 @@ namespace apiBase.Extensions
 {
     public static class LoggerMiddleware
     {
+        /// <summary>
+        /// Configures Serilog for logging to a file and, in production, to a PostgreSQL database.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to configure.</param>
+        /// <param name="configuration">The <see cref="IConfiguration"/> to read settings from.</param>
+        /// <param name="environment">The <see cref="IWebHostEnvironment"/> to determine the environment.</param>
+        /// <returns>The configured <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection AddCustomLogging(
             this IServiceCollection services,
             IConfiguration configuration,

@@ -11,8 +11,8 @@ namespace apiBase.Services
 
         public OdbcService(IConfiguration configuration, ILogger<OdbcService> logger)
         {
-            string builderBasisConnectionString;
-            // var odbcBasisConnectionString = configuration.GetConnectionString("ODBC_BASIS_DEV");
+            string builderddOdbcConnectionString;
+            // var odbcddOdbcConnectionString = configuration.GetConnectionString("ODBC_ddOdbc_DEV");
             var settings = configuration.GetSection("Settings");
             int maxRetries = settings.GetValue<int>("maxRetries");
 
@@ -22,18 +22,18 @@ namespace apiBase.Services
                     $"Enviroment: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}"
                 );
 
-                builderBasisConnectionString =
-                    configuration.GetConnectionString("BASIS_DEV") ?? string.Empty;
+                builderddOdbcConnectionString =
+                    configuration.GetConnectionString("ddOdbc_DEV") ?? string.Empty;
             }
             else
             {
-                builderBasisConnectionString =
-                    configuration.GetConnectionString("BASIS_PROD") ?? string.Empty;
+                builderddOdbcConnectionString =
+                    configuration.GetConnectionString("ddOdbc_PROD") ?? string.Empty;
             }
 
-            if (string.IsNullOrEmpty(builderBasisConnectionString))
+            if (string.IsNullOrEmpty(builderddOdbcConnectionString))
             {
-                throw new ArgumentNullException("BASIS connection strings are missing");
+                throw new ArgumentNullException("ddOdbc connection strings are missing");
             }
 
             if (int.IsNegative(maxRetries))
@@ -42,50 +42,20 @@ namespace apiBase.Services
             }
 
             _logger = logger;
-            _connectionString = builderBasisConnectionString;
+            _connectionString = builderddOdbcConnectionString;
             _configuration = configuration;
         }
 
-        public string GetBasisLibrary(string negocio)
-        {
-            string basisLibrary;
-            if (negocio == "ARCA")
-            {
-                basisLibrary = "BASFLEBC";
-            }
-            else if (negocio == "TONI")
-            {
-                basisLibrary = "BASFLDIP";
-            }
-            else if (negocio == "INALECSA")
-            {
-                basisLibrary = "BASFLCDT";
-            }
-            else
-            {
-                throw new ArgumentException("Invalid negocio value");
-            }
-
-            return basisLibrary;
-        }
-
-        public string GetBasisTempLibFile()
-        {
-            var settings = _configuration.GetSection("Settings");
-            var basisTempFile = settings.GetValue<string>("BasisTmpFile");
-            var basistempLib = settings.GetValue<string>("BasisTmpLibrary");
-            if (string.IsNullOrEmpty(basisTempFile))
-            {
-                throw new ArgumentNullException("BasisTempFile connection strings are missing");
-            }
-            if (string.IsNullOrEmpty(basistempLib))
-            {
-                throw new ArgumentNullException("BasisTmpLibrary connection strings are missing");
-            }
-            return basistempLib + "." + basisTempFile;
-        }
-
-        public async Task<int> CreateBasisTempDb(string tableStructure, string tempTable)
+        /// <summary>
+        /// Creates a temporary table in the database.
+        /// </summary>
+        /// <param name="tableStructure">The structure of the table, including columns and types.</param>
+        /// <param name="tempTable">The name of the temporary table to create.</param>
+        /// <returns>1 if the table was created, -1 if an error occurred.</returns>
+        /// <exception cref="OverflowException">If the table already exists.</exception>
+        /// <exception cref="OdbcException">If the table cannot be created.</exception>
+        /// <exception cref="Exception">If an error occurs while creating the table.</exception>
+        public async Task<int> CreateOdbcTempDb(string tableStructure, string tempTable)
         {
             // using var connection = await CreateJdbcConnection();
             // using var connection = await CreateIDB2Connection();
@@ -138,10 +108,19 @@ namespace apiBase.Services
             }
         }
 
+        /// <summary>
+        /// Attempts to truncate the specified temporary table in the ODBC database.
+        /// </summary>
+        /// <param name="tempTable">The name of the temporary table to truncate.</param>
+        /// <returns>Returns 1 if the table was successfully truncated, or 0 if the table does not exist or an error occurs.</returns>
+        /// <exception cref="OverflowException">Thrown when an overflow error occurs during the operation.</exception>
+        /// <exception cref="OdbcException">Thrown when an ODBC-related error occurs, except when the table does not exist.</exception>
+        /// <exception cref="Exception">Thrown when any other error occurs during the operation.</exception>
+
         private async Task<int> TruncateTable(string tempTable)
         {
             using var connection = await CreateOdbcConnection();
-            // var tempTable = GetBasisTempLibFile();
+            // var tempTable = GetddOdbcTempLibFile();
             try
             {
                 using var dropCommand = connection.CreateCommand();
@@ -182,18 +161,12 @@ namespace apiBase.Services
         }
 
         /// <summary>
-        /// Crea una conexión ODBC asíncrona a DB2 BASIS utilizando una cadena de conexión especificada en app settings de acuerdo al entorno en que se encuentre, puede ser BASIS_DEV o BASIS_PROD
+        /// Creates a new ODBC connection using the configured connection string.
         /// </summary>
-        /// <remarks>
-        /// Este método utiliza un pool de conexiones para obtener una conexión existente o crear una nueva si es necesario.
-        /// La conexión devuelta ya tiene la comunicación abierta y está lista para ejecutar comandos.
-        /// </remarks>
-        /// <returns>
-        /// Una instancia de <see cref="OdbcConnection"/> con la comunicación abierta.
-        /// </returns>
-        /// <exception cref="OdbcException">
-        /// Se lanza si ocurre un error al intentar abrir la conexión.
-        /// </exception>
+        /// <returns>The newly created ODBC connection.</returns>
+        /// <exception cref="OverflowException">When the connection string is too long and the executable is not compiled as 32-bit.</exception>
+        /// <exception cref="OdbcException">When an ODBC error occurs while creating the connection.</exception>
+        /// <exception cref="Exception">When an unexpected error occurs while creating the connection.</exception>
         public async Task<OdbcConnection> CreateOdbcConnection()
         {
             _logger.LogInformation(
