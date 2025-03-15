@@ -3,7 +3,7 @@
   "name": "API Template for .NET 9.0+",
   "description": "A template with all the infrastructure services needed to develop a .NET 9.0+ API",
   "identity": "apiBase.webApi",
-  "shortName": "apiBase",
+  "shortName": "github.com/n3cr0murl0c/apiBase",
   "classifications": ["Web", "API", ".NET", "9.0+"],
   "tags": {
     "language": "C#",
